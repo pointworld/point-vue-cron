@@ -13,7 +13,7 @@ Cron Expression Generator, based on vue and element-ui
 ## install
 
 ```
-npm install vue-cron
+// npm install point-vue-cron
 ```
 
 ## usage
