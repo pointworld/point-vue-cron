@@ -1,23 +1,30 @@
 <style lang="less" scoped>
-  #changeContab {
-    .cron-el-input-number {
-      width: 100px;
+  #pointVueCron {
+    /* cover default style of element-ui */
+    .cron-el {
+      .cron-el-input-number {
+        width: 100px;
+      }
+      .cron-el-select {
+        width: 90px;
+      }
+      .cron-el-date-picker {
+        width: 200px;
+      }
     }
 
     .cron-select-box {
-      margin-bottom: 20px;
-      .cron-el-select {
-        width: 90px;
-        margin-left: 10px;
+      .cron-title {
+        margin-right: 10px;
       }
     }
 
     .cron-content-box {
+      margin-top: 20px;
       .cron-once {
         margin-left: 28px;
-        .cron-el-date-picker {
-          margin-left: 10px;
-          width: 200px;
+        .cron-date-picker-text {
+          margin-right: 10px;
         }
       }
       .cron-per-minute {
@@ -64,14 +71,9 @@
         }
         .cron-day-or-week-con {
           margin-top: 16px;
-          .cron-day-con {
-            .cron-el-select {
-              width: 100px;
-            }
-          }
+          .cron-day-con {}
           .cron-week-con {
             .cron-el-select {
-              width: 100px;
               margin-left: 6px;
               margin-bottom: 16px;
             }
@@ -95,9 +97,10 @@
 </style>
 
 <template>
-  <div id="changeContab">
-    <div class="cron-select-box">
-      定时计划
+  <div id="pointVueCron">
+    <!-- cron select box -->
+    <div class="cron-el cron-select-box">
+      <span class="cron-title">定时计划</span>
       <el-select
         class="cron-el-select"
         size="mini"
@@ -112,20 +115,24 @@
         </el-option>
       </el-select>
     </div>
-    <div class="cron-content-box">
+    <!-- /cron select box -->
+    <!-- cron content box -->
+    <div class="cron-el cron-content-box">
+      <!-- content: cron select item - once -->
       <div
         class="cron-once"
         v-if="value==='1'">
-        日期
+        <span class="cron-date-picker-text">日期</span>
         <el-date-picker
             class="cron-el-date-picker"
             size="mini"
-            v-model="datetime"
             type="datetime"
             placeholder="选择日期时间"
+            v-model="datetime"
             @change="datetimeChange">
           </el-date-picker>
       </div>
+      <!-- content: cron select item - per-minute -->
       <div
         class="cron-per-minute"
         v-else-if="value==='2'">
@@ -133,20 +140,21 @@
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="minute.incrementIncrement"
           :min="1"
-          :max="59">
+          :max="59"
+          v-model="minute.incrementIncrement">
         </el-input-number>
-        分， 从
+        分，从
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="minute.incrementStart"
           :min="0"
-          :max="59">
+          :max="59"
+          v-model="minute.incrementStart">
         </el-input-number>
         分开始
       </div>
+      <!-- content: cron select item - per-hour -->
       <div
         class="cron-per-hour"
         v-else-if="value==='3'">
@@ -154,28 +162,29 @@
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="hour.incrementIncrement"
           :min="0"
-          :max="23">
+          :max="23"
+          v-model="hour.incrementIncrement">
         </el-input-number>
         时，从（时:分）
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="hour.incrementStart"
           :min="0"
-          :max="23">
+          :max="23"
+          v-model="hour.incrementStart">
         </el-input-number>
         :
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="minute.incrementStart"
           :min="0"
-          :max="59">
+          :max="59"
+          v-model="minute.incrementStart">
         </el-input-number>
         开始
       </div>
+      <!-- content: cron select item - per-day -->
       <div
         class="cron-per-day"
         v-else-if="value==='4'">
@@ -183,35 +192,36 @@
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="day.incrementIncrement"
           :min="0"
-          :max="31">
+          :max="31"
+          v-model="day.incrementIncrement">
         </el-input-number>
         日，从
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="day.incrementStart"
           :min="0"
-          :max="31">
+          :max="31"
+          v-model="day.incrementStart">
         </el-input-number>
         日的（时:分）
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="hour.incrementStart"
           :min="0"
-          :max="23">
+          :max="23"
+          v-model="hour.incrementStart">
         </el-input-number>
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="minute.incrementStart"
           :min="0"
-          :max="59">
+          :max="59"
+          v-model="minute.incrementStart">
         </el-input-number>
         开始。
       </div>
+      <!-- content: cron select item - per-week -->
       <div
         class="cron-per-week"
         v-else-if="value==='5'">
@@ -219,9 +229,9 @@
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="week.incrementIncrement"
           :min="0"
-          :max="7">
+          :max="7"
+          v-model="week.incrementIncrement">
         </el-input-number>
         周，从本周的
         <el-checkbox-group
@@ -241,19 +251,20 @@
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="hour.incrementStart"
           :min="0"
-          :max="23">
+          :max="23"
+          v-model="hour.incrementStart">
         </el-input-number>
         <el-input-number
           class="cron-el-input-number"
           size="mini"
-          v-model="minute.incrementStart"
           :min="0"
-          :max="59">
+          :max="59"
+          v-model="minute.incrementStart">
         </el-input-number>
         开始
       </div>
+      <!-- content: cron select item - per-month -->
       <div
         class="cron-per-month"
         v-else="value==='6'">
@@ -295,12 +306,12 @@
             v-if="dayOrWeek==='1'">
             月中第
             <el-select
-              :key="dayOrWeek"
               class="cron-el-select"
               size="mini"
               multiple
-              v-model="day.specificSpecific"
-              placeholder="请选择">
+              placeholder="请选择"
+              :key="dayOrWeek"
+              v-model="day.specificSpecific">
               <el-option
                 v-for="val in 31"
                 :key="$index"
@@ -312,17 +323,17 @@
             <el-input-number
               class="cron-el-input-number"
               size="mini"
-              v-model="hour.incrementStart"
               :min="0"
-              :max="23">
+              :max="23"
+              v-model="hour.incrementStart">
             </el-input-number>
             :
             <el-input-number
               class="cron-el-input-number"
               size="mini"
-              v-model="minute.incrementStart"
               :min="0"
-              :max="59">
+              :max="59"
+              v-model="minute.incrementStart">
             </el-input-number>
             开始
           </div>
@@ -360,44 +371,59 @@
             <el-input-number
               class="cron-el-input-number"
               size="mini"
-              v-model="hour.incrementStart"
               :min="0"
-              :max="23">
+              :max="23"
+              v-model="hour.incrementStart">
             </el-input-number>
             :
             <el-input-number
               class="cron-el-input-number"
               size="mini"
-              v-model="minute.incrementStart"
               :min="0"
-              :max="59">
+              :max="59"
+              v-model="minute.incrementStart">
             </el-input-number>
             开始
           </div>
         </div>
-
       </div>
     </div>
-    <div class="cron-bottom">
+    <!-- /cron content box -->
+    <!-- cron bottom -->
+    <div class="cron-el cron-bottom">
       <div class="cron-result">
         <span class="value">结果：{{this.cron}}</span>
       </div>
       <el-button type="primary" @click="change">Save</el-button>
       <el-button type="primary" @click="close">Close</el-button>
     </div>
+    <!-- /cron bottom -->
   </div>
 </template>
 
 <script>
-  import minute from './components/minute'
+
+  // TODO: split component: second, minute, hour, day, month, week, year
+  // import second from './components/second'
+  // import minute from './components/minute'
+  // import hour   from './components/hour'
+  // import day    from './components/day'
+  // import month  from './components/month'
+  // import week   from './components/week'
+  // import year   from './components/year'
 
   export default {
     name: 'vueCron',
-    components: { minute },
+    // TODO: split component
+    // components: { second, minute, hour, day, month, week, year, },
     props: ['data'],
     data() {
       return {
+        // switch day or week content
         dayOrWeek: '1',
+
+        /* switch content: cron select item: start */
+        datetime: '',
         minute: {
           incrementStart: '',
           incrementIncrement: '',
@@ -407,9 +433,9 @@
           incrementIncrement: '',
         },
         day: {
-          specificSpecific: [],
           incrementStart: '',
           incrementIncrement: '',
+          specificSpecific: [],
         },
         week: {
           // 起始周
@@ -430,10 +456,9 @@
           incrementIncrement: '',
           specificSpecific: [],
         },
+        /* switch content: cron select item: end */
 
-        datetime: '',
-
-        /* select box data start */
+        /* switch select item: start */
         options: [
           {
             value: '1',
@@ -460,20 +485,24 @@
             label: '每月'
           }
         ],
+        // default selected item
         value: '1',
-        /* select box data end */
+        /* switch select item: end */
       }
     },
     watch: {
       data() {
-        this.reset(this.$data)
+        // this.reset()
       }
     },
     computed: {
       minutesText() {
         let minutes = ''
 
-        if (this.minute.incrementStart === 0 || this.minute.incrementStart === '0') {
+        if (
+          this.minute.incrementStart === 0
+          || this.minute.incrementStart === '0'
+        ) {
           minutes = '0'
         } else {
           minutes = this.minute.incrementStart
@@ -488,7 +517,10 @@
       hoursText() {
         let hours = ''
 
-        if (this.hour.incrementStart === 0 || this.hour.incrementStart === '0') {
+        if (
+          this.hour.incrementStart === 0
+          || this.hour.incrementStart === '0'
+        ) {
           hours = '0'
         } else {
           hours = this.hour.incrementStart
@@ -522,7 +554,11 @@
           days =  this.day.incrementStart + '/' + this.day.incrementIncrement
         }
 
-        if (this.week.incrementStart && this.week.incrementStart !== '?' || this.week.incrementIncrement) {
+        if (
+          this.week.incrementStart
+          && this.week.incrementStart !== '?'
+          || this.week.incrementIncrement
+        ) {
           days = '?'
         }
 
@@ -669,7 +705,7 @@
         }
       },
       change() {
-        console.log(this.cron)
+        // console.log(this.cron)
         // this.resultProcess(this.cron)
         this.$emit('change', this.cron)
         this.close()
