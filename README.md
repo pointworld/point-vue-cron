@@ -76,8 +76,8 @@ export default {
 ## events
 - change(cronText)
   - param: `{String} cronText` the value of cron expression
-    trigger when the value of cron expression changed
+  - trigger when the value of cron expression changed
     
 - close()
   - param: null
-    trigger when the cancel button of select box was clicked
+  - trigger when the cancel button of select box was clicked

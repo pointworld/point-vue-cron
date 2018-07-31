@@ -71,7 +71,11 @@
         }
         .cron-day-or-week-con {
           margin-top: 16px;
-          .cron-day-con {}
+          .cron-day-con {
+            .cron-el-select {
+              width: 124px;
+            }
+          }
           .cron-week-con {
             .cron-el-select {
               margin-left: 6px;
@@ -230,7 +234,7 @@
           class="cron-el-input-number"
           size="mini"
           :min="0"
-          :max="7"
+          :max="5"
           v-model="week.incrementIncrement">
         </el-input-number>
         周，从本周的
@@ -394,8 +398,8 @@
       <div class="cron-result">
         <span class="value">结果：{{this.cron}}</span>
       </div>
-      <el-button type="primary" @click="change">Save</el-button>
-      <el-button type="primary" @click="close">Close</el-button>
+      <el-button type="primary" @click="change">保存</el-button>
+      <el-button type="primary" @click="close">关闭</el-button>
     </div>
     <!-- /cron bottom -->
   </div>
@@ -543,6 +547,8 @@
           this.day.specificSpecific
           && this.day.specificSpecific.length
         ) {
+          this.day.specificSpecific = this.day.specificSpecific.sort(this.compare)
+
           this.day.specificSpecific.map(val => {
             days += val + ','
           })
@@ -568,6 +574,8 @@
         let weeks = ''
 
         if (this.week.specificSpecific) {
+          this.week.specificSpecific = this.week.specificSpecific.sort(this.compare)
+
           this.week.specificSpecific.map(val => {
             weeks += val + ','
           })
@@ -576,6 +584,8 @@
         }
 
         if (this.week.dayOfWeek.specificSpecific) {
+          this.week.dayOfWeek.specificSpecific = this.week.dayOfWeek.specificSpecific.sort(this.compare)
+
           this.week.dayOfWeek.specificSpecific.map(val => {
             weeks += val + ','
           })
@@ -606,6 +616,8 @@
           this.month.specificSpecific
           && this.month.specificSpecific.length
         ) {
+          this.month.specificSpecific = this.month.specificSpecific.sort(this.compare)
+
           this.month.specificSpecific.map(val => {
             months += val + ','
           })
@@ -624,51 +636,162 @@
       }
     },
     methods: {
-      /*resultProcess(result) {
+      // compare stringNumber or number
+      compare(x, y) {
+        if (Number(x) < Number(y)) {
+          return -1
+        } else if (Number(x) > Number(y)) {
+          return 1
+        } else {
+          return 0
+        }
+      },
+      // process the result of cron expression generator, translate the result to text description
+      resultProcess(result) {
+        // save the final translated text
         let resultTipText = ''
+        // save the temporary result
         let resultTextArr = []
+        // split cron result string into a result array
         let resultArr = result.split(' ')
 
-        console.log(resultArr)
-
         for (let i=0; i<resultArr.length; i++) {
-          // 处理秒对应的提示文本
+          // second text description
           if (0 === i) {
             resultTextArr[0] = '0秒'
           }
-          // 处理分对应的提示文本
+          // minute text description
           if (1 === i) {
             // 如果分对应的字段为 '*'
             // 如果分对应的字段含有 '/'
+            // 如果分对应的字段既不为'*'，也不含有 '/'
             if (resultArr[1].indexOf('*') > -1) {
-              resultTextArr[1] = '每分'
+              resultTextArr[1] = '每分钟'
             } else if (resultArr[1].indexOf('/') > -1) {
               let temporaryArr = resultArr[1].split('/')
 
-              resultTextArr[1] = '从' + temporaryArr[0] + '分开始，每隔' + temporaryArr[1] + '分钟'
+              resultTextArr[1] = '每' + temporaryArr[1] + '分钟，' + '从' + temporaryArr[0] + '分'
+            } else {
+              resultTextArr[1] = resultArr[1] + '分'
             }
           }
-          // 处理时对应的提示文本
+          // hour text description
           if (2 === i) {
             // 如果时对应的字段为 '*'
             // 如果时对应的字段含有 '/'
+            // 如果时对应的字段既不为 '*'，也不含有 '/'
+            if (resultArr[2].indexOf('*') > -1) {
+              resultTextArr[2] = ''
+            } else if (resultArr[2].indexOf('/') > -1) {
+              let temporaryArr = resultArr[2].split('/')
+
+              resultTextArr[2] = '每隔' + temporaryArr[1] + '小时，' + '从' + temporaryArr[0] + '点'
+            } else {
+              resultTextArr[2] = resultArr[2] + '点'
+            }
           }
-          // 处理天对应的提示文本
-          if (3 === i) {}
-          // 处理月对应的提示文本
-          if (4 === i) {}
-          // 处理周对应的提示文本
-          if (5 === i) {}
-          // 处理年对应的提示文本
+          // day text description
+          if (3 === i) {
+            // 如果天对应的字段为 '?'
+            // 如果天对应的字段为 '*'
+            // 如果天对应的字段含有 '/'
+            // 如果天对应的字段既不为 '*' 也不含有 '/'
+            if (resultArr[3].indexOf('?') > -1) {
+              resultTextArr[3] = ''
+            } else if (resultArr[3].indexOf('*') > -1) {
+              resultTextArr[3] = ''
+            } else if (resultArr[3].indexOf('/') > -1) {
+              let temporaryArr = resultArr[3].split('/')
+
+              resultTextArr[3] = '每隔' + temporaryArr[1] + '天，' + '从' + temporaryArr[0] + '号的'
+            } else {
+              if (resultArr[3].indexOf(',') > -1) {
+                resultTextArr[3] = resultArr[3] + '日的'
+              } else {
+                resultTextArr[3] = resultArr[3] + '日'
+              }
+            }
+          }
+          // month text description
+          if (4 === i) {
+            // 如果月对应的字段为 '*'
+            // 如果月对应的字段含有 '/'
+            // 如果月对应的字段既不为 '*' 也不含有 '/'
+            if (resultArr[4].indexOf('*') > -1) {
+              resultTextArr[4] = ''
+            } else if (resultArr[4].indexOf('/') > -1) {
+              let temporaryArr = resultArr[4].split('/')
+
+              resultTextArr[4] = '每隔' + temporaryArr[1] + '个月执行，' + '从' + temporaryArr[0] + '月'
+            } else {
+              if (resultArr[4].indexOf(',') > -1) {
+                resultTextArr[4] = resultArr[4] + '月的'
+              } else {
+                resultTextArr[4] = resultArr[4] + '月'
+              }
+
+            }
+          }
+          // week text description
+          if (5 === i) {
+            // 如果周对应的字段为 '?'
+            // 如果周对应的字段含有 '/'
+            if (resultArr[5].indexOf('?') > -1) {
+              resultTextArr[5] = ''
+            } else if (resultArr[5].indexOf('/') > -1) {
+              let temporaryArr = resultArr[5].split('/')
+
+              // convert week num
+              let convertedWeekNum = temporaryArr[0]
+                .toString()
+                .replace(/0/, '周日')
+                .replace(/1/, '周一')
+                .replace(/2/, '周二')
+                .replace(/3/, '周三')
+                .replace(/4/, '周四')
+                .replace(/5/, '周五')
+                .replace(/6/, '周六')
+
+              resultTextArr[5] = '每隔' + temporaryArr[1] + '周，' + '从' + convertedWeekNum + '的'
+            } else if (resultArr[5].indexOf('#') > -1) {
+              let temporaryArr = resultArr[5].split('#')
+
+              let convertedWeekNum = temporaryArr[0]
+                .toString()
+                .replace(/0/, '星期日')
+                .replace(/1/, '星期一')
+                .replace(/2/, '星期二')
+                .replace(/3/, '星期三')
+                .replace(/4/, '星期四')
+                .replace(/5/, '星期五')
+                .replace(/6/, '星期六')
+
+
+              resultTextArr[5] = '第' + temporaryArr[1] + '周的' + convertedWeekNum + '的'
+            } else {
+
+            }
+          }
+          // year text description
           if (6 === i) {
-            resultTextArr[6] = '年'
+            resultTextArr[6] = ''
           }
         }
 
-        resultTipText = resultTextArr.reverse().join('')
+        // assemble resultTextArr to a resultTipText
+        if (resultArr[5].indexOf('?') > -1) {
+          resultTipText = resultTextArr.reverse().join('')
+        } else if (resultArr[3].indexOf('?') > -1) {
+          resultTipText = resultTextArr[4]
+            + resultTextArr[5]
+            + resultTextArr[3]
+            + resultTextArr[2]
+            + resultTextArr[1]
+        }
 
         return resultTipText
-      },*/
+      },
+      // trigger when switched el-radio within per month
       dayOrWeekChange() {
         this.dayOrWeek = this.dayOrWeek == '1' ? '1' : '2'
 
@@ -704,15 +827,20 @@
           this.month.specificSpecific = []
         }
       },
+      // trigger when the value of cron expression changed
       change() {
         // console.log(this.cron)
-        // this.resultProcess(this.cron)
+        let resultTipText = this.resultProcess(this.cron)
+        console.log(resultTipText)
+
         this.$emit('change', this.cron)
         this.close()
       },
+      // trigger when the cancel button of select box was clicked
       close() {
         this.$emit('close')
       },
+      // trigger when el-date-picker was set
       datetimeChange() {
         if (this.datetime) {
           this.month.incrementStart = this.datetime.getMonth() + 1
@@ -720,13 +848,11 @@
           this.hour.incrementStart = this.datetime.getHours()
           this.minute.incrementStart = this.datetime.getMinutes()
         }
-
-        // this.$emit('change', this.cron)
-        // this.close()
       },
-      // 当切换条件时，重置数据
+      // reset cron data when switch condition
       reset() {
         switch (this.value) {
+          // once
           case '1':
             this.minute.incrementStart = ''
             this.minute.incrementIncrement = ''
@@ -741,7 +867,7 @@
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
             break
-          // 切换分
+          // minute
           case '2':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = '1'
@@ -756,7 +882,7 @@
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
             break
-          // 切换时
+          // hour
           case '3':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = ''
@@ -771,7 +897,7 @@
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
             break
-          // 切换日
+          // day
           case '4':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = ''
@@ -787,7 +913,7 @@
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
             break
-          // 切换周
+          // week
           case '5':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = ''
@@ -804,7 +930,7 @@
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
             break
-          // 切换月
+          // month
           case '6':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = ''
