@@ -22,7 +22,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pointworld/vue-cron/issues"
+    "url": "https://github.com/pointworld/point-vue-cron/issues"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
