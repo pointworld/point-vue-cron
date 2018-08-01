@@ -99,7 +99,7 @@
       }
       .cron-button-group {
         display: block;
-        width: 101px;
+        width: 111px;
         margin: 0 auto;
       }
     }
@@ -210,7 +210,7 @@
         <el-input-number
           class="cron-el-input-number"
           size="small"
-          :min="0"
+          :min="1"
           :max="31"
           v-model="day.incrementStart">
         </el-input-number>
@@ -247,14 +247,14 @@
         <el-checkbox-group
           class="cron-el-checkbox-group"
           v-model="week.dayOfWeek.specificSpecific">
-          <el-checkbox label="0">周一</el-checkbox>
-          <el-checkbox label="1">周二</el-checkbox>
-          <el-checkbox label="2">周三</el-checkbox>
-          <el-checkbox label="3">周四</el-checkbox>
-          <el-checkbox label="4">周五</el-checkbox>
+          <el-checkbox label="1">周一</el-checkbox>
+          <el-checkbox label="2">周二</el-checkbox>
+          <el-checkbox label="3">周三</el-checkbox>
+          <el-checkbox label="4">周四</el-checkbox>
+          <el-checkbox label="5">周五</el-checkbox>
           <br/>
-          <el-checkbox label="5">周六</el-checkbox>
-          <el-checkbox label="6">周日</el-checkbox>
+          <el-checkbox label="6">周六</el-checkbox>
+          <el-checkbox label="0">周日</el-checkbox>
         </el-checkbox-group>
         <br/>
         （时:分）
@@ -358,7 +358,7 @@
               placeholder="请选择"
               v-model="week.incrementStart">
               <el-option
-                v-for="item in [{label:'第一周',value:1},{label:'第二周',value:2},{label:'第三周',value:3},{label:'第四周',value:4},{label:'第五周',value:5},]"
+                v-for="item in weekOrder"
                 :key="item.label"
                 :label="item.label"
                 :value="item.value">
@@ -366,15 +366,16 @@
             </el-select>
             <br/>
             <el-checkbox-group
+              @change="test"
               v-model="week.dayOfWeek.specificSpecific">
-              <el-checkbox label="0">周一</el-checkbox>
-              <el-checkbox label="1">周二</el-checkbox>
-              <el-checkbox label="2">周三</el-checkbox>
-              <el-checkbox label="3">周四</el-checkbox>
-              <el-checkbox label="4">周五</el-checkbox>
+              <el-checkbox label="1">周一</el-checkbox>
+              <el-checkbox label="2">周二</el-checkbox>
+              <el-checkbox label="3">周三</el-checkbox>
+              <el-checkbox label="4">周四</el-checkbox>
+              <el-checkbox label="5">周五</el-checkbox>
               <br/>
-              <el-checkbox label="5">周六</el-checkbox>
-              <el-checkbox label="6">周日</el-checkbox>
+              <el-checkbox label="6">周六</el-checkbox>
+              <el-checkbox label="0">周日</el-checkbox>
             </el-checkbox-group>
             <br/>
             从（时:分）
@@ -402,7 +403,7 @@
     <!-- cron bottom -->
     <div class="cron-el cron-bottom">
       <div class="cron-result">
-        <span class="value">结果：{{this.cron}}</span>
+        <span class="value">{{this.cronTipText}}</span>
       </div>
       <div class="cron-button-group">
         <el-button
@@ -439,7 +440,21 @@
     props: ['data'],
     data() {
       return {
-        cronTipText: '',
+        weekOrder: [
+          {label: '第一周', value: '1'},
+          {label: '第二周', value: '2'},
+          {label: '第三周', value: '3'},
+          {label: '第四周', value: '4'},
+          {label: '第五周', value: '5'},
+        ],
+
+        // TODO: future fields: may expose ancestor components
+        /*cronObj: {
+          cronTipText: '',
+          cronExpression: '',
+        },*/
+        // cronTipText: '123',
+
         // switch day or week content
         dayOrWeek: '1',
 
@@ -530,7 +545,7 @@
         }
 
         if (this.minute.incrementIncrement) {
-          minutes =  this.minute.incrementStart + '/' + this.minute.incrementIncrement
+          minutes = this.minute.incrementStart + '/' + this.minute.incrementIncrement
         }
 
         return minutes
@@ -557,7 +572,7 @@
         let days = ''
 
         if (this.day.incrementStart) {
-          days =  this.day.incrementStart
+          days = this.day.incrementStart
         }
 
         if (
@@ -574,7 +589,7 @@
         }
 
         if (this.day.incrementIncrement) {
-          days =  this.day.incrementStart + '/' + this.day.incrementIncrement
+          days = this.day.incrementStart + '/' + this.day.incrementIncrement
         }
 
         if (
@@ -650,7 +665,16 @@
       },
       cron() {
         return `${'0'} ${this.minutesText || '*'} ${this.hoursText || '*'} ${this.daysText || '*'} ${this.monthsText || '*'} ${this.weeksText || '?'} ${'*'}`
-      }
+      },
+      cronTipText() {
+        this.realTimeChange()
+
+        if (this.cron === '0 * * * * ? *') {
+          return ''
+        }
+
+        return this.resultProcess(this.cron)
+      },
     },
     methods: {
       // compare stringNumber or number
@@ -672,7 +696,7 @@
         // split cron result string into a result array
         let resultArr = result.split(' ')
 
-        for (let i=0; i<resultArr.length; i++) {
+        for (let i = 0; i < resultArr.length; i++) {
           // second text description
           if (0 === i) {
             resultTextArr[0] = '0秒'
@@ -790,6 +814,8 @@
               || resultArr[5] === '0'
             ) {
               resultTextArr[5] = ''
+            } else if(resultArr[5] && resultArr[5].indexOf('#') === -1) {
+              resultTextArr[5] = ''
             }
           }
           // year text description
@@ -823,7 +849,7 @@
           this.hour.incrementIncrement = ''
           this.day.incrementStart = ''
           this.day.incrementIncrement = ''
-          this.day.specificSpecific = []
+          this.day.specificSpecific = ['1']
           this.week.incrementStart = '?'
           this.week.incrementIncrement = ''
           this.week.specificSpecific = ''
@@ -842,20 +868,26 @@
           this.week.incrementStart = ''
           this.week.incrementIncrement = ''
           this.week.specificSpecific = ''
-          this.week.dayOfWeek.specificSpecific = ['0']
+          this.week.dayOfWeek.specificSpecific = ['1']
           this.month.incrementStart = ''
           this.month.incrementIncrement = ''
           this.month.specificSpecific = []
         }
       },
       // trigger when the value of cron expression changed
-      change() {
-        // console.log(this.cron)
-        this.cronTipText = this.resultProcess(this.cron)
-
+      realTimeChange() {
         this.$emit('change', this.cron)
-        // this.$emit('change', this.cronTipText)
+      },
+      // trigger when the value of cron expression changed
+      change() {
+        this.$emit('change', this.cron)
         this.close()
+      },
+      // TODO: need to optimize
+      test() {
+        if (this.week.incrementStart == '') {
+          this.$message.error('请先选择是第几周！')
+        }
       },
       // trigger when the cancel button of select box was clicked
       close() {
@@ -922,10 +954,10 @@
           case '4':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = ''
-            this.hour.incrementStart = '1'
+            this.hour.incrementStart = '0'
             this.hour.incrementIncrement = ''
-            this.day.incrementStart = ''
-            this.day.incrementIncrement = ''
+            this.day.incrementStart = '1'
+            this.day.incrementIncrement = '1'
             this.day.specificSpecific = []
             this.week.incrementStart = '?'
             this.week.incrementIncrement = ''
@@ -938,7 +970,7 @@
           case '5':
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = ''
-            this.hour.incrementStart = '1'
+            this.hour.incrementStart = '0'
             this.hour.incrementIncrement = ''
             this.day.incrementStart = '?'
             this.day.incrementIncrement = ''
@@ -946,7 +978,7 @@
             this.week.incrementStart = ''
             this.week.incrementIncrement = '1'
             this.week.specificSpecific = ''
-            this.week.dayOfWeek.specificSpecific = ['0']
+            this.week.dayOfWeek.specificSpecific = ['1']
             this.month.incrementStart = ''
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
@@ -972,8 +1004,10 @@
         }
       }
     },
-    mounted() {},
-    created() {},
+    mounted() {
+    },
+    created() {
+    },
   }
 
 </script>
