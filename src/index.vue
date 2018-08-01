@@ -439,7 +439,7 @@
     props: ['data'],
     data() {
       return {
-        resultTipText: '',
+        cronTipText: '',
         // switch day or week content
         dayOrWeek: '1',
 
@@ -459,16 +459,16 @@
           specificSpecific: [],
         },
         week: {
-          // 起始周
+          // week start
           incrementStart: '',
-          // 每隔几周
+          // every few weeks
           incrementIncrement: '',
-          // 包含那几个周
+          // include which weeks
           specificSpecific: [],
           dayOfWeek: {
-            // 起始星期
+            // day start of week
             incrementStart: '',
-            // 包含哪几个星期
+            // include which days of week
             specificSpecific: [],
           },
         },
@@ -679,9 +679,9 @@
           }
           // minute text description
           if (1 === i) {
-            // 如果分对应的字段为 '*'
-            // 如果分对应的字段含有 '/'
-            // 如果分对应的字段既不为'*'，也不含有 '/'
+            // if resultArr[1] is '*'
+            // if resultArr[1] includes '/'
+            // if resultArr[1] neither is '*', nor includes '/'
             if (resultArr[1].indexOf('*') > -1) {
               resultTextArr[1] = '每分钟'
             } else if (resultArr[1].indexOf('/') > -1) {
@@ -694,9 +694,9 @@
           }
           // hour text description
           if (2 === i) {
-            // 如果时对应的字段为 '*'
-            // 如果时对应的字段含有 '/'
-            // 如果时对应的字段既不为 '*'，也不含有 '/'
+            // if resultArr[2] is '*'
+            // if resultArr[2] includes '/'
+            // if resultArr[2] neither is '*', nor includes '/'
             if (resultArr[2].indexOf('*') > -1) {
               resultTextArr[2] = ''
             } else if (resultArr[2].indexOf('/') > -1) {
@@ -709,10 +709,10 @@
           }
           // day text description
           if (3 === i) {
-            // 如果天对应的字段为 '?'
-            // 如果天对应的字段为 '*'
-            // 如果天对应的字段含有 '/'
-            // 如果天对应的字段既不为 '*' 也不含有 '/'
+            // if resultArr[3] is '?'
+            // if resultArr[3] is '*'
+            // if resultArr[3] includes '/'
+            // if resultArr[3] neither is '*', nor includes '/'
             if (resultArr[3].indexOf('?') > -1) {
               resultTextArr[3] = ''
             } else if (resultArr[3].indexOf('*') > -1) {
@@ -731,9 +731,9 @@
           }
           // month text description
           if (4 === i) {
-            // 如果月对应的字段为 '*'
-            // 如果月对应的字段含有 '/'
-            // 如果月对应的字段既不为 '*' 也不含有 '/'
+            // if resultArr[4] is '*'
+            // if resultArr[4] includes '/'
+            // if resultArr[4] neither is '*', nor includes '/'
             if (resultArr[4].indexOf('*') > -1) {
               resultTextArr[4] = ''
             } else if (resultArr[4].indexOf('/') > -1) {
@@ -751,8 +751,8 @@
           }
           // week text description
           if (5 === i) {
-            // 如果周对应的字段为 '?'
-            // 如果周对应的字段含有 '/'
+            // if resultArr[5] is '?'
+            // if resultArr[5] includes '/'
             if (resultArr[5].indexOf('?') > -1) {
               resultTextArr[5] = ''
             } else if (resultArr[5].indexOf('/') > -1) {
@@ -851,10 +851,10 @@
       // trigger when the value of cron expression changed
       change() {
         // console.log(this.cron)
-        this.resultTipText = this.resultProcess(this.cron)
-        console.log(this.resultTipText)
+        this.cronTipText = this.resultProcess(this.cron)
 
         this.$emit('change', this.cron)
+        // this.$emit('change', this.cronTipText)
         this.close()
       },
       // trigger when the cancel button of select box was clicked
