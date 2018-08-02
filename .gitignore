@@ -6,4 +6,3 @@ npm-debug.log.*
 lerna-debug.log.*
 .idea
 .npmrc
-dist
