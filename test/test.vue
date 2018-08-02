@@ -12,7 +12,7 @@
 
 <template>
   <div class="cron">
-    <h1>vue-cron</h1>
+    <h1>point-vue-cron</h1>
     <el-popover v-model="cronPopover">
       <vueCron
         :data="cron"
