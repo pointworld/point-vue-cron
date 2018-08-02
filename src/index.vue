@@ -239,7 +239,7 @@
         <el-input-number
           class="cron-el-input-number"
           size="small"
-          :min="0"
+          :min="1"
           :max="5"
           v-model="week.incrementIncrement">
         </el-input-number>
@@ -247,14 +247,14 @@
         <el-checkbox-group
           class="cron-el-checkbox-group"
           v-model="week.dayOfWeek.specificSpecific">
-          <el-checkbox label="1">周一</el-checkbox>
-          <el-checkbox label="2">周二</el-checkbox>
-          <el-checkbox label="3">周三</el-checkbox>
-          <el-checkbox label="4">周四</el-checkbox>
-          <el-checkbox label="5">周五</el-checkbox>
+          <el-checkbox label="2">周一</el-checkbox>
+          <el-checkbox label="3">周二</el-checkbox>
+          <el-checkbox label="4">周三</el-checkbox>
+          <el-checkbox label="5">周四</el-checkbox>
+          <el-checkbox label="6">周五</el-checkbox>
           <br/>
-          <el-checkbox label="6">周六</el-checkbox>
-          <el-checkbox label="0">周日</el-checkbox>
+          <el-checkbox label="7">周六</el-checkbox>
+          <el-checkbox label="1">周日</el-checkbox>
         </el-checkbox-group>
         <br/>
         （时:分）
@@ -368,14 +368,14 @@
             <el-checkbox-group
               @change="test"
               v-model="week.dayOfWeek.specificSpecific">
-              <el-checkbox label="1">周一</el-checkbox>
-              <el-checkbox label="2">周二</el-checkbox>
-              <el-checkbox label="3">周三</el-checkbox>
-              <el-checkbox label="4">周四</el-checkbox>
-              <el-checkbox label="5">周五</el-checkbox>
+              <el-checkbox label="2">周一</el-checkbox>
+              <el-checkbox label="3">周二</el-checkbox>
+              <el-checkbox label="4">周三</el-checkbox>
+              <el-checkbox label="5">周四</el-checkbox>
+              <el-checkbox label="6">周五</el-checkbox>
               <br/>
-              <el-checkbox label="6">周六</el-checkbox>
-              <el-checkbox label="0">周日</el-checkbox>
+              <el-checkbox label="7">周六</el-checkbox>
+              <el-checkbox label="1">周日</el-checkbox>
             </el-checkbox-group>
             <br/>
             从（时:分）
@@ -785,27 +785,27 @@
               // convert week num
               let convertedWeekNum = temporaryArr[0]
                 .toString()
-                .replace(/0/, '周日')
-                .replace(/1/, '周一')
-                .replace(/2/, '周二')
-                .replace(/3/, '周三')
-                .replace(/4/, '周四')
-                .replace(/5/, '周五')
-                .replace(/6/, '周六')
+                .replace(/1/, '周日')
+                .replace(/2/, '周一')
+                .replace(/3/, '周二')
+                .replace(/4/, '周三')
+                .replace(/5/, '周四')
+                .replace(/6/, '周五')
+                .replace(/7/, '周六')
 
-              resultTextArr[5] = '每隔' + temporaryArr[1] + '周，' + '从' + convertedWeekNum + '的'
+              resultTextArr[5] = '每' + temporaryArr[1] + '周，' + '从' + convertedWeekNum + '的'
             } else if (resultArr[5].indexOf('#') > -1) {
               let temporaryArr = resultArr[5].split('#')
 
               let convertedWeekNum = temporaryArr[0]
                 .toString()
-                .replace(/0/, '星期日')
-                .replace(/1/, '星期一')
-                .replace(/2/, '星期二')
-                .replace(/3/, '星期三')
-                .replace(/4/, '星期四')
-                .replace(/5/, '星期五')
-                .replace(/6/, '星期六')
+                .replace(/1/, '周日')
+                .replace(/2/, '周一')
+                .replace(/3/, '周二')
+                .replace(/4/, '周三')
+                .replace(/5/, '周四')
+                .replace(/6/, '周五')
+                .replace(/7/, '周六')
 
 
               resultTextArr[5] = '第' + temporaryArr[1] + '周的' + convertedWeekNum + '的'
@@ -868,7 +868,7 @@
           this.week.incrementStart = ''
           this.week.incrementIncrement = ''
           this.week.specificSpecific = ''
-          this.week.dayOfWeek.specificSpecific = ['1']
+          this.week.dayOfWeek.specificSpecific = ['2']
           this.month.incrementStart = ''
           this.month.incrementIncrement = ''
           this.month.specificSpecific = []
@@ -978,7 +978,7 @@
             this.week.incrementStart = ''
             this.week.incrementIncrement = '1'
             this.week.specificSpecific = ''
-            this.week.dayOfWeek.specificSpecific = ['1']
+            this.week.dayOfWeek.specificSpecific = ['2']
             this.month.incrementStart = ''
             this.month.incrementIncrement = ''
             this.month.specificSpecific = ''
