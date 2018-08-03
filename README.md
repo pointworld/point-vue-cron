@@ -9,11 +9,27 @@ Cron Expression Generator, based on vue and element-ui
 
 - Vue 2.0.0+
 - element-ui 2.0.0+
+- babel-polyfill
+- babel-runtime
+
+
+## dev dependencies
+
+- cooking
+- cooking-autoprefixer
+- cooking-cli
+- cooking-less
+- cooking-vue2
+- hoek
+- json-stable-stringify
+- vue-template-compiler
+- webpack-node-externals
+
 
 ## install
 
-```
-// npm install point-vue-cron
+```text
+npm i point-vue-cron
 ```
 
 ## usage
