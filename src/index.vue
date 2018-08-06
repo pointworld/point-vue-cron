@@ -667,7 +667,10 @@
         return `${'0'} ${this.minutesText || '*'} ${this.hoursText || '*'} ${this.daysText || '*'} ${this.monthsText || '*'} ${this.weeksText || '?'} ${'*'}`
       },
       cronTipText() {
-        if (this.cron === '0 * * * * ? *') {
+        if (
+          this.cron === '0 * * * * ? *'
+          || this.cron === '* * * * * ? *'
+        ) {
           return ''
         } else {
           this.realTimeChange()
@@ -843,34 +846,18 @@
         this.dayOrWeek = this.dayOrWeek == '1' ? '1' : '2'
 
         if (this.dayOrWeek == 1) {
+          this.resetCronData()
           this.minute.incrementStart = '0'
-          this.minute.incrementIncrement = ''
           this.hour.incrementStart = '0'
-          this.hour.incrementIncrement = ''
-          this.day.incrementStart = ''
-          this.day.incrementIncrement = ''
           this.day.specificSpecific = ['1']
           this.week.incrementStart = '?'
-          this.week.incrementIncrement = ''
-          this.week.specificSpecific = ''
-          this.week.dayOfWeek.specificSpecific = ''
-          this.month.incrementStart = ''
-          this.month.incrementIncrement = ''
           this.month.specificSpecific = []
         } else {
+          this.resetCronData()
           this.minute.incrementStart = '0'
-          this.minute.incrementIncrement = ''
           this.hour.incrementStart = '0'
-          this.hour.incrementIncrement = ''
           this.day.incrementStart = '?'
-          this.day.incrementIncrement = ''
-          this.day.specificSpecific = ''
-          this.week.incrementStart = ''
-          this.week.incrementIncrement = ''
-          this.week.specificSpecific = ''
           this.week.dayOfWeek.specificSpecific = ['2']
-          this.month.incrementStart = ''
-          this.month.incrementIncrement = ''
           this.month.specificSpecific = []
         }
       },
@@ -880,7 +867,7 @@
       },
       // trigger when the value of cron expression changed
       change() {
-        this.$emit('change', this.cron)
+        // this.$emit('change', this.cron)
         this.close()
       },
       // TODO: need to optimize
@@ -907,107 +894,71 @@
         switch (this.value) {
           // once
           case '1':
-            this.minute.incrementStart = ''
-            this.minute.incrementIncrement = ''
-            this.hour.incrementStart = ''
-            this.hour.incrementIncrement = ''
-            this.day.incrementStart = ''
-            this.day.incrementIncrement = ''
-            this.week.incrementStart = ''
-            this.week.incrementIncrement = ''
-            this.week.dayOfWeek.specificSpecific = ''
-            this.month.incrementStart = ''
-            this.month.incrementIncrement = ''
-            this.month.specificSpecific = ''
+            this.resetCronData()
             break
           // minute
           case '2':
+            this.resetCronData()
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = '1'
-            this.hour.incrementStart = ''
-            this.hour.incrementIncrement = ''
-            this.day.incrementStart = ''
-            this.day.incrementIncrement = ''
-            this.week.incrementStart = ''
-            this.week.incrementIncrement = ''
-            this.week.dayOfWeek.specificSpecific = ''
-            this.month.incrementStart = ''
-            this.month.incrementIncrement = ''
-            this.month.specificSpecific = ''
             break
           // hour
           case '3':
+            this.resetCronData()
             this.minute.incrementStart = '0'
-            this.minute.incrementIncrement = ''
             this.hour.incrementStart = '0'
             this.hour.incrementIncrement = '1'
-            this.day.incrementStart = ''
-            this.day.incrementIncrement = ''
-            this.week.incrementStart = ''
-            this.week.incrementIncrement = ''
-            this.week.dayOfWeek.specificSpecific = ''
-            this.month.incrementStart = ''
-            this.month.incrementIncrement = ''
-            this.month.specificSpecific = ''
             break
           // day
           case '4':
+            this.resetCronData()
             this.minute.incrementStart = '0'
-            this.minute.incrementIncrement = ''
             this.hour.incrementStart = '0'
-            this.hour.incrementIncrement = ''
             this.day.incrementStart = '1'
             this.day.incrementIncrement = '1'
             this.day.specificSpecific = []
             this.week.incrementStart = '?'
-            this.week.incrementIncrement = ''
-            this.week.dayOfWeek.specificSpecific = ''
-            this.month.incrementStart = ''
-            this.month.incrementIncrement = ''
-            this.month.specificSpecific = ''
             break
           // week
           case '5':
+            this.resetCronData()
             this.minute.incrementStart = '0'
-            this.minute.incrementIncrement = ''
             this.hour.incrementStart = '0'
-            this.hour.incrementIncrement = ''
             this.day.incrementStart = '?'
-            this.day.incrementIncrement = ''
-            this.day.specificSpecific = ''
-            this.week.incrementStart = ''
             this.week.incrementIncrement = '1'
-            this.week.specificSpecific = ''
             this.week.dayOfWeek.specificSpecific = ['2']
-            this.month.incrementStart = ''
-            this.month.incrementIncrement = ''
-            this.month.specificSpecific = ''
             break
           // month
           case '6':
+            this.resetCronData()
             this.dayOrWeek = 1
             this.minute.incrementStart = '0'
-            this.minute.incrementIncrement = ''
             this.hour.incrementStart = '0'
-            this.hour.incrementIncrement = ''
-            this.day.incrementStart = ''
-            this.day.incrementIncrement = ''
             this.day.specificSpecific = []
             this.week.incrementStart = '?'
-            this.week.incrementIncrement = ''
-            this.week.specificSpecific = ''
-            this.week.dayOfWeek.specificSpecific = ''
-            this.month.incrementStart = ''
-            this.month.incrementIncrement = ''
             this.month.specificSpecific = []
             break
         }
-      }
+      },
+      resetCronData() {
+        this.minute.incrementStart = ''
+        this.minute.incrementIncrement = ''
+        this.hour.incrementStart = ''
+        this.hour.incrementIncrement = ''
+        this.day.incrementStart = ''
+        this.day.incrementIncrement = ''
+        this.day.specificSpecific = ''
+        this.week.incrementStart = ''
+        this.week.incrementIncrement = ''
+        this.week.specificSpecific = ''
+        this.week.dayOfWeek.specificSpecific = ''
+        this.month.incrementStart = ''
+        this.month.incrementIncrement = ''
+        this.month.specificSpecific = ''
+      },
     },
-    mounted() {
-    },
-    created() {
-    },
+    mounted() {},
+    created() {},
   }
 
 </script>
