@@ -667,10 +667,10 @@
         return `${'0'} ${this.minutesText || '*'} ${this.hoursText || '*'} ${this.daysText || '*'} ${this.monthsText || '*'} ${this.weeksText || '?'} ${'*'}`
       },
       cronTipText() {
-        this.realTimeChange()
-
         if (this.cron === '0 * * * * ? *') {
           return ''
+        } else {
+          this.realTimeChange()
         }
 
         return this.resultProcess(this.cron)
