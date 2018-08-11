@@ -8,7 +8,7 @@ Cron Expression Generator, based on vue and element-ui
 ## dependencies
 
 - Vue 2.0.0+
-- element-ui 2.0.0+
+- element-ui 1.0.0+
 - babel-polyfill
 - babel-runtime
 
@@ -38,7 +38,6 @@ npm i point-vue-cron
 // config
 import Vue from 'vue'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
 // global import
