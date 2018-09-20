@@ -1,10 +1,10 @@
 # point-vue-cron
 
-point-vue-cron: https://github.com/pointworld/point-vue-cron
-reference: https://github.com/1615450788/vue-cron
-
 Cron Expression Generator, based on vue and element-ui
 [demo](https://pointworld.github.io/point-vue-cron/)
+
+- point-vue-cron: https://github.com/pointworld/point-vue-cron
+- reference: https://github.com/1615450788/vue-cron
 
 ## dependencies
 
