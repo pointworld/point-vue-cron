@@ -7,7 +7,8 @@
     "dev": "cooking watch -p -c /config/cooking.dev.js",
     "dist": "cooking build -p -c /config/cooking.dev.js",
     "build": "cooking build -p -c /config/cooking.build.js",
-    "npm": "npm run build && npm run dist && git add . && git commit -m build && npm version patch && npm publish && git push && git push origin --tags && git subtree push --prefix=dist origin gh-pages",
+    "npm": "npm run build && npm run dist && git add . && git commit -m build && npm version patch && npm publish && git push && git push origin --tags",
+    "npmgh": "npm run build && npm run dist && git add . && git commit -m build && npm version patch && npm publish && git push && git push origin --tags && git subtree push --prefix=dist origin gh-pages",
     "gh": "npm run dist && git add . && git commit -m gh-pages && git push && git subtree push --prefix=dist origin gh-pages"
   },
   "author": "point",
