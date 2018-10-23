@@ -202,7 +202,7 @@
         <el-input-number
           class="cron-el-input-number"
           size="small"
-          :min="0"
+          :min="1"
           :max="31"
           v-model="day.incrementIncrement">
         </el-input-number>
@@ -729,7 +729,7 @@
             } else if (resultArr[2].indexOf('/') > -1) {
               let temporaryArr = resultArr[2].split('/')
 
-              resultTextArr[2] = '每隔' + temporaryArr[1] + '小时，' + '从' + temporaryArr[0] + '点'
+              resultTextArr[2] = '每' + temporaryArr[1] + '小时，' + '从' + temporaryArr[0] + '点'
             } else {
               resultTextArr[2] = resultArr[2] + '点'
             }
@@ -747,7 +747,7 @@
             } else if (resultArr[3].indexOf('/') > -1) {
               let temporaryArr = resultArr[3].split('/')
 
-              resultTextArr[3] = '每隔' + temporaryArr[1] + '天，' + '从' + temporaryArr[0] + '号的'
+              resultTextArr[3] = '每' + temporaryArr[1] + '天，' + '从' + temporaryArr[0] + '号的'
             } else {
               if (resultArr[3].indexOf(',') > -1) {
                 resultTextArr[3] = resultArr[3] + '日的'
@@ -766,7 +766,7 @@
             } else if (resultArr[4].indexOf('/') > -1) {
               let temporaryArr = resultArr[4].split('/')
 
-              resultTextArr[4] = '每隔' + temporaryArr[1] + '个月执行，' + '从' + temporaryArr[0] + '月'
+              resultTextArr[4] = '每' + temporaryArr[1] + '个月执行，' + '从' + temporaryArr[0] + '月'
             } else {
               if (resultArr[4].indexOf(',') > -1) {
                 resultTextArr[4] = resultArr[4] + '月的'
