@@ -1,6 +1,6 @@
 {
   "name": "point-vue-cron",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "point-vue-cron",
   "main": "build/cron.min.js",
   "scripts": {
