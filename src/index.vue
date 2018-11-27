@@ -579,7 +579,7 @@
           this.day.specificSpecific
           && this.day.specificSpecific.length
         ) {
-          this.day.specificSpecific = this.day.specificSpecific.sort(this.compare)
+          this.day.specificSpecific = this.day.specificSpecific.sort((x, y) => x - y)
 
           this.day.specificSpecific.map(val => {
             days += val + ','
@@ -606,7 +606,7 @@
         let weeks = ''
 
         if (this.week.specificSpecific) {
-          this.week.specificSpecific = this.week.specificSpecific.sort(this.compare)
+          this.week.specificSpecific = this.week.specificSpecific.sort((x, y) => x - y)
 
           this.week.specificSpecific.map(val => {
             weeks += val + ','
@@ -616,7 +616,7 @@
         }
 
         if (this.week.dayOfWeek.specificSpecific) {
-          this.week.dayOfWeek.specificSpecific = this.week.dayOfWeek.specificSpecific.sort(this.compare)
+          this.week.dayOfWeek.specificSpecific = this.week.dayOfWeek.specificSpecific.sort((x, y) => x - y)
 
           this.week.dayOfWeek.specificSpecific.map(val => {
             weeks += val + ','
@@ -648,7 +648,7 @@
           this.month.specificSpecific
           && this.month.specificSpecific.length
         ) {
-          this.month.specificSpecific = this.month.specificSpecific.sort(this.compare)
+          this.month.specificSpecific = this.month.specificSpecific.sort((x, y) => x - y)
 
           this.month.specificSpecific.map(val => {
             months += val + ','
@@ -680,16 +680,6 @@
       },
     },
     methods: {
-      // compare stringNumber or number
-      compare(x, y) {
-        if (Number(x) < Number(y)) {
-          return -1
-        } else if (Number(x) > Number(y)) {
-          return 1
-        } else {
-          return 0
-        }
-      },
       // process the result of cron expression generator, translate the result to text description
       resultProcess(result) {
         // save the final translated text
