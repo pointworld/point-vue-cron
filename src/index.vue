@@ -424,7 +424,7 @@
 
 <script>
 
-  // TODO: split component: second, minute, hour, day, month, week, year
+  // TODO: 拆分组件: second, minute, hour, day, month, week, year
   // import second from './components/second'
   // import minute from './components/minute'
   // import hour   from './components/hour'
@@ -440,6 +440,7 @@
     props: ['data'],
     data() {
       return {
+        // 定时计划 - 每月 - 月中第几周的下拉框数据
         weekOrder: [
           {label: '第一周', value: '1'},
           {label: '第二周', value: '2'},
@@ -455,46 +456,54 @@
         },*/
         // cronTipText: '123',
 
-        // switch day or week content
+        // 定时计划 - 每月 - 日期 - 控制当单选按钮组发生切换时，对应的内容变化
+        // '1' 对应一个月中的第几日；'2' 对应一个星期中的第几日
         dayOrWeek: '1',
 
-        /* switch content: cron select item: start */
+        /** 定时计划选项对应切换内容: start */
+        // 字段：
+        // incrementStart      - 从什么时候开始
+        // incrementIncrement  - 每多久
+        // specificSpecific    - 指定哪几天（时/天/周/月）
+
+        // 定时计划 - 一次性
         datetime: '',
+        // 定时计划 - 每分
         minute: {
           incrementStart: '',
           incrementIncrement: '',
         },
+        // 定时计划 - 每时
         hour: {
           incrementStart: '',
           incrementIncrement: '',
         },
+        // 定时计划 - 每天
         day: {
           incrementStart: '',
           incrementIncrement: '',
           specificSpecific: [],
         },
+        // 定时计划 - 每周/月
         week: {
-          // week start
           incrementStart: '',
-          // every few weeks
           incrementIncrement: '',
-          // include which weeks
           specificSpecific: [],
           dayOfWeek: {
-            // day start of week
             incrementStart: '',
-            // include which days of week
             specificSpecific: [],
           },
         },
+        // 定时计划 - 每月
         month: {
           incrementStart: '',
           incrementIncrement: '',
           specificSpecific: [],
         },
-        /* switch content: cron select item: end */
+        /** 定时计划选项对应切换内容: end */
 
-        /* switch select item: start */
+        /** 定时计划选项: start */
+        // 定时计划 - 下拉选项数据
         options: [
           {
             value: '1',
@@ -521,9 +530,9 @@
             label: '每月'
           }
         ],
-        // default selected item
+        // 定时计划 - 下拉选项数据默认选中项
         value: '1',
-        /* switch select item: end */
+        /** 定时计划选项: end */
       }
     },
     watch: {
@@ -532,6 +541,7 @@
       }
     },
     computed: {
+      // 生成 cron 表达式中的 ‘分’
       minutesText() {
         let minutes = ''
 
@@ -550,6 +560,7 @@
 
         return minutes
       },
+      // 生成 cron 表达式中的 ‘时’
       hoursText() {
         let hours = ''
 
@@ -568,6 +579,7 @@
 
         return hours
       },
+      // 生成 cron 表达式中的 ‘天’
       daysText() {
         let days = ''
 
@@ -602,6 +614,7 @@
 
         return days
       },
+      // 生成 cron 表达式中的 ‘周’
       weeksText() {
         let weeks = ''
 
@@ -641,6 +654,7 @@
 
         return weeks
       },
+      // 生成 cron 表达式中的 ‘月’
       monthsText() {
         let months = ''
 
@@ -663,9 +677,11 @@
 
         return months
       },
+      // 生成 cron 表达式
       cron() {
         return `${'0'} ${this.minutesText || '*'} ${this.hoursText || '*'} ${this.daysText || '*'} ${this.monthsText || '*'} ${this.weeksText || '?'} ${'*'}`
       },
+      // 生成 cron 表达式对应的文本描述
       cronTipText() {
         if (
           this.cron === '0 * * * * ? *'
@@ -689,26 +705,29 @@
         } else {
           return 0
         }
+
+        // 可以将以上代码简化为
+        // return x - y
       },
-      // process the result of cron expression generator, translate the result to text description
+      // 转换 cron 表达式为对应的文本描述
       resultProcess(result) {
-        // save the final translated text
+        // 存储最终 cron 表达式对应的文字描述
         let resultTipText = ''
-        // save the temporary result
+        // 临时存储转换结果
         let resultTextArr = []
-        // split cron result string into a result array
+        // 获取由 cron 表达式每一项组成的数组
         let resultArr = result.split(' ')
 
         for (let i = 0; i < resultArr.length; i++) {
-          // second text description
+          // 秒
           if (0 === i) {
             resultTextArr[0] = '0秒'
           }
-          // minute text description
+          // 分
           if (1 === i) {
-            // if resultArr[1] is '*'
-            // if resultArr[1] includes '/'
-            // if resultArr[1] neither is '*', nor includes '/'
+            // 如果 resultArr[1] 值为 '*'
+            // 如果 resultArr[1] 包含 '/'
+            // 如果 resultArr[1] 值既不是 '*', 也不是 includes '/'
             if (resultArr[1].indexOf('*') > -1) {
               resultTextArr[1] = '每分钟'
             } else if (resultArr[1].indexOf('/') > -1) {
@@ -719,11 +738,11 @@
               resultTextArr[1] = resultArr[1] + '分'
             }
           }
-          // hour text description
+          // 时
           if (2 === i) {
-            // if resultArr[2] is '*'
-            // if resultArr[2] includes '/'
-            // if resultArr[2] neither is '*', nor includes '/'
+            // 如果 resultArr[2] 值为 '*'
+            // 如果 resultArr[2] 包含 '/'
+            // 如果 resultArr[2] 值既不是 '*', 也不是 includes '/'
             if (resultArr[2].indexOf('*') > -1) {
               resultTextArr[2] = ''
             } else if (resultArr[2].indexOf('/') > -1) {
@@ -734,12 +753,12 @@
               resultTextArr[2] = resultArr[2] + '点'
             }
           }
-          // day text description
+          // 天
           if (3 === i) {
-            // if resultArr[3] is '?'
-            // if resultArr[3] is '*'
-            // if resultArr[3] includes '/'
-            // if resultArr[3] neither is '*', nor includes '/'
+            // 如果 resultArr[3] 值为 '?'
+            // 如果 resultArr[3] 值为 '*'
+            // 如果 resultArr[3] 包含 '/'
+            // 如果 resultArr[3] 既不是 '*', 也不包含 '/'
             if (resultArr[3].indexOf('?') > -1) {
               resultTextArr[3] = ''
             } else if (resultArr[3].indexOf('*') > -1) {
@@ -756,11 +775,11 @@
               }
             }
           }
-          // month text description
+          // 月
           if (4 === i) {
-            // if resultArr[4] is '*'
-            // if resultArr[4] includes '/'
-            // if resultArr[4] neither is '*', nor includes '/'
+            // 如果 resultArr[4] 值为 '*'
+            // 如果 resultArr[4] 包含 '/'
+            // 如果 resultArr[4] 既不是 '*', 也不包含 '/'
             if (resultArr[4].indexOf('*') > -1) {
               resultTextArr[4] = ''
             } else if (resultArr[4].indexOf('/') > -1) {
@@ -776,10 +795,10 @@
 
             }
           }
-          // week text description
+          // 周
           if (5 === i) {
-            // if resultArr[5] is '?'
-            // if resultArr[5] includes '/'
+            // 如果 resultArr[5] 值为 '?'
+            // 如果 resultArr[5] 包含 '/'
             if (resultArr[5].indexOf('?') > -1) {
               resultTextArr[5] = ''
             } else if (resultArr[5].indexOf('/') > -1) {
@@ -821,13 +840,13 @@
               resultTextArr[5] = ''
             }
           }
-          // year text description
+          // 年
           if (6 === i) {
             resultTextArr[6] = ''
           }
         }
 
-        // assemble resultTextArr to a resultTipText
+        // 组装得到 cron 表达式对应的文字描述
         if (resultArr[5].indexOf('?') > -1) {
           resultTipText = resultTextArr.reverse().join('')
         } else if (resultArr[3].indexOf('?') > -1) {
@@ -839,12 +858,14 @@
             + resultTextArr[0]
         }
 
+        // 返回最终 cron 表达式对应的文字描述
         return resultTipText
       },
-      // trigger when switched el-radio within per month
+      // 当 定时计划 - 每月 - 日期 - 单选框组发生切换时的处理
       dayOrWeekChange() {
         this.dayOrWeek = this.dayOrWeek == '1' ? '1' : '2'
 
+        // 星期中第几日的处理
         if (this.dayOrWeek == 1) {
           this.resetCronData()
           this.minute.incrementStart = '0'
@@ -852,7 +873,9 @@
           this.day.specificSpecific = ['1']
           this.week.incrementStart = '?'
           this.month.specificSpecific = []
-        } else {
+        }
+        // 月中第几日的处理
+        else {
           this.resetCronData()
           this.minute.incrementStart = '0'
           this.hour.incrementStart = '0'
@@ -861,26 +884,27 @@
           this.month.specificSpecific = []
         }
       },
-      // trigger when the value of cron expression changed
+      // 当 cron 表达式的值发生变化时触发，将 cron 表达式的值传给父组件
       realTimeChange() {
         this.$emit('change', this.cron)
       },
-      // trigger when the value of cron expression changed
+      // 点击保存按钮时触发（除了关闭弹窗，没有其他作用）
       change() {
         // this.$emit('change', this.cron)
         this.close()
       },
       // TODO: need to optimize
+      // 定时计划 - 每月 - 日期 - 星期中的第几日，在没有选中月中的‘第几周’时，如果直接设置星期中的第几日，会弹出错误提示
       test() {
         if (this.week.incrementStart == '') {
           this.$message.error('请先选择是第几周！')
         }
       },
-      // trigger when the cancel button of select box was clicked
+      // 点击取消按钮时触发，关闭弹窗
       close() {
         this.$emit('close')
       },
-      // trigger when el-date-picker was set
+      // 当 定时计划 - 一次性 的值被设置时的处理
       datetimeChange() {
         if (this.datetime) {
           this.month.incrementStart = this.datetime.getMonth() + 1
@@ -889,27 +913,27 @@
           this.minute.incrementStart = this.datetime.getMinutes()
         }
       },
-      // reset cron data when switch condition
+      // 当 定时计划下拉框选项发生变化时，重置相关表单内容
       reset() {
         switch (this.value) {
-          // once
+          // 一次性
           case '1':
             this.resetCronData()
             break
-          // minute
+          // 每分
           case '2':
             this.resetCronData()
             this.minute.incrementStart = '0'
             this.minute.incrementIncrement = '1'
             break
-          // hour
+          // 每时
           case '3':
             this.resetCronData()
             this.minute.incrementStart = '0'
             this.hour.incrementStart = '0'
             this.hour.incrementIncrement = '1'
             break
-          // day
+          // 每日
           case '4':
             this.resetCronData()
             this.minute.incrementStart = '0'
@@ -919,7 +943,7 @@
             this.day.specificSpecific = []
             this.week.incrementStart = '?'
             break
-          // week
+          // 每周
           case '5':
             this.resetCronData()
             this.minute.incrementStart = '0'
@@ -928,7 +952,7 @@
             this.week.incrementIncrement = '1'
             this.week.dayOfWeek.specificSpecific = ['2']
             break
-          // month
+          // 每月
           case '6':
             this.resetCronData()
             this.dayOrWeek = 1
@@ -940,6 +964,7 @@
             break
         }
       },
+      // 重置 cron 表达式的相关数据
       resetCronData() {
         this.minute.incrementStart = ''
         this.minute.incrementIncrement = ''
